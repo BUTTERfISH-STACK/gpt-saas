@@ -18,34 +18,27 @@ export async function POST(request) {
     }
 
     const model =
-      process.env.HF_MODEL || "mistralai/Mistral-7B-Instruct-v0.2";
+      process.env.HF_MODEL || "microsoft/Phi-3-mini-4k-instruct";
 
     console.log("Using model:", model);
     console.log("Token starts with:", process.env.HF_TOKEN?.substring(0, 5));
 
-    const client = new InferenceClient(
-      "https://api-inference.huggingface.co",
-      { use_cache: false }
-    );
+    const client = new InferenceClient(process.env.HF_TOKEN);
 
-    // Build prompt from messages
-    let prompt = SYSTEM_PROMPT + "\n\n";
-    for (const msg of messages) {
-      prompt += `${msg.role === "user" ? "User" : "Assistant"}: ${msg.content}\n`;
-    }
-    prompt += "Assistant:";
+    // Build conversation for conversational API
+    const conversation = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...messages,
+    ];
 
-    const response = await client.textGeneration({
+    const response = await client.conversational({
       model,
-      inputs: prompt,
-      parameters: {
-        max_new_tokens: 420,
-        temperature: 0.6,
-        return_full_text: false,
-      },
+      messages: conversation,
+      max_tokens: 420,
+      temperature: 0.6,
     });
 
-    const text = response?.[0]?.generated_text ?? "";
+    const text = response?.generated_text ?? "";
 
     return Response.json({ text, model });
   } catch (error) {

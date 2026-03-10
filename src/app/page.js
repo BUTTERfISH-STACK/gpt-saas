@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import SceneFrame from "../components/SceneFrame";
 
 const QUICK_PROMPTS = [
   "Draft a launch email for a new AI feature.",
@@ -180,6 +181,34 @@ export default function Home() {
               {error && <p className="error">{error}</p>}
             </div>
           </aside>
+        </section>
+
+        <section className="container showcase">
+          <div>
+            <h2 className="section-title">A cinematic 3D layer that sells the vision</h2>
+            <p className="hero-copy">
+              Give customers a premium first impression with motion that feels
+              purposeful. This scene runs in WebGL with instancing, capped DPR,
+              and lightweight shaders for performance.
+            </p>
+            <div className="hero-stats">
+              <div className="stat">
+                <strong>120</strong>
+                <span>Instanced nodes</span>
+              </div>
+              <div className="stat">
+                <strong>1.75x</strong>
+                <span>Max device DPR</span>
+              </div>
+              <div className="stat">
+                <strong>&lt;3s</strong>
+                <span>Target LCP</span>
+              </div>
+            </div>
+          </div>
+          <div className="scene-wrap">
+            <SceneFrame />
+          </div>
         </section>
 
         <section id="features" className="container features">

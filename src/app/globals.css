@@ -124,6 +124,50 @@ main {
   align-items: center;
 }
 
+.showcase {
+  display: grid;
+  gap: 42px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: center;
+  padding: 40px 0 120px;
+}
+
+.scene-wrap {
+  position: relative;
+  min-height: 420px;
+}
+
+.scene-frame {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: radial-gradient(circle at top, rgba(124, 240, 255, 0.2), transparent 60%),
+    linear-gradient(140deg, rgba(16, 18, 35, 0.9), rgba(6, 8, 18, 0.95));
+  border: 1px solid rgba(121, 149, 255, 0.25);
+  box-shadow: var(--shadow);
+}
+
+.scene-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(8, 7, 15, 0.1), rgba(8, 7, 15, 0.6));
+  pointer-events: none;
+}
+
+.scene-caption {
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(246, 247, 255, 0.7);
+  background: rgba(8, 7, 15, 0.6);
+  border: 1px solid rgba(121, 149, 255, 0.3);
+  padding: 8px 12px;
+  border-radius: 999px;
+}
+
 .nav {
   position: sticky;
   top: 0;
@@ -284,6 +328,29 @@ main {
   gap: 12px;
 }
 
+.chat-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-body::-webkit-scrollbar-thumb {
+  background: rgba(121, 149, 255, 0.35);
+  border-radius: 999px;
+}
+
+.chat-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.chat-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(124, 240, 255, 0.15), transparent 55%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 .message {
   display: flex;
   gap: 12px;
@@ -312,6 +379,7 @@ main {
   border: 1px solid rgba(120, 140, 240, 0.15);
   color: var(--muted);
   max-width: 280px;
+  box-shadow: 0 16px 30px rgba(8, 10, 20, 0.35);
 }
 
 .message.user .bubble {
@@ -433,6 +501,10 @@ footer {
   .hero {
     padding-top: 120px;
   }
+
+  .scene-frame {
+    height: 360px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -442,5 +514,9 @@ footer {
 
   .chat-input {
     grid-template-columns: 1fr;
+  }
+
+  .scene-frame {
+    height: 300px;
   }
 }

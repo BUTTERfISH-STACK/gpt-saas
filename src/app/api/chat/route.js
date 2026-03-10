@@ -23,22 +23,33 @@ export async function POST(request) {
     console.log("Using model:", model);
     console.log("Token starts with:", process.env.HF_TOKEN?.substring(0, 5));
 
-    const client = new InferenceClient(process.env.HF_TOKEN);
+    // Use Hugging Face Inference API directly with new endpoint
+    const response = await fetch(
+      `https://router.huggingface.co/${model}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.HF_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          inputs: SYSTEM_PROMPT + "\n\n" + messages.map(m => `${m.role}: ${m.content}`).join("\n"),
+          parameters: {
+            max_new_tokens: 420,
+            temperature: 0.6,
+            return_full_text: false,
+          },
+        }),
+      }
+    );
 
-    // Build conversation for conversational API
-    const conversation = [
-      { role: "system", content: SYSTEM_PROMPT },
-      ...messages,
-    ];
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HF API error: ${response.status} - ${errorText}`);
+    }
 
-    const response = await client.conversational({
-      model,
-      messages: conversation,
-      max_tokens: 420,
-      temperature: 0.6,
-    });
-
-    const text = response?.generated_text ?? "";
+    const data = await response.json();
+    const text = Array.isArray(data) ? data[0]?.generated_text : data.generated_text;
 
     return Response.json({ text, model });
   } catch (error) {

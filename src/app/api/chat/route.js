@@ -23,7 +23,10 @@ export async function POST(request) {
     console.log("Using model:", model);
     console.log("Token starts with:", process.env.HF_TOKEN?.substring(0, 5));
 
-    const client = new InferenceClient(process.env.HF_TOKEN);
+    const client = new InferenceClient(
+      "https://api-inference.huggingface.co",
+      { use_cache: false }
+    );
 
     // Build prompt from messages
     let prompt = SYSTEM_PROMPT + "\n\n";
@@ -32,7 +35,7 @@ export async function POST(request) {
     }
     prompt += "Assistant:";
 
-    const response = await client.generate({
+    const response = await client.textGeneration({
       model,
       inputs: prompt,
       parameters: {

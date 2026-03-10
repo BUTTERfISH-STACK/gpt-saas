@@ -18,7 +18,7 @@ export async function POST(request) {
     }
 
     const model =
-      process.env.HF_MODEL || "meta-llama/Meta-Llama-3.1-8B-Instruct";
+      process.env.HF_MODEL || "mistralai/Mistral-7B-Instruct-v0.2";
 
     const client = new InferenceClient(process.env.HF_TOKEN);
 
@@ -33,11 +33,15 @@ export async function POST(request) {
 
     return Response.json({ text, model });
   } catch (error) {
+    console.error("Inference error:", error);
+    console.error("HTTP Response:", error?.cause?.httpResponse);
     return Response.json(
       {
         error:
           error?.message ||
           "The model request failed. Check your HF token and model access.",
+        details: error?.cause?.message || error?.cause || null,
+        httpStatus: error?.cause?.httpResponse?.status || null,
       },
       { status: 500 }
     );
